@@ -10,6 +10,7 @@
     - winner: The team that won the game.  
     - name: The name of the game.  
     - gameHistory: A list of past game history records.  
+    - gameID: the ID of the current game
 
     Constructors:  
     - Game(): Initializes a game with default teams (2 teams, each with 1 player).  
@@ -42,8 +43,9 @@ public abstract class Game {
     // every game has teams, a winner, a name, and a list of previously played games
     private Team[] teams;
     private Team winner;
-    String name;
+    private String name;
     private List<GameHistory> gameHistory;
+    private String gameID;
 
     // CONSTRUCTORS
     public Game() {
@@ -51,6 +53,7 @@ public abstract class Game {
         this.winner = null;
         this.name = null;
         this.gameHistory = new ArrayList<>();
+        this.gameID = null;
     }
 
     public Game(String name) {
@@ -58,6 +61,15 @@ public abstract class Game {
         this.winner = null;
         this.name = name;
         this.gameHistory = new ArrayList<>();
+        this.gameID = null;
+    }
+
+    public Game(String name, String gameID) {
+        this.teams = new Team[] { new Team(new Player(), 0), new Team(new Player(), 1) }; // default of 2 teams with 1 player each
+        this.winner = null;
+        this.name = name;
+        this.gameHistory = new ArrayList<>();
+        this.gameID = gameID;
     }
 
     // GETTER METHODS
@@ -75,6 +87,10 @@ public abstract class Game {
 
     public List<GameHistory> getGameHistory() {
         return this.gameHistory;
+    }
+
+    public String getGameID() {
+        return this.gameID;
     }
 
     public Team getTeamByName(String name) {
@@ -100,6 +116,10 @@ public abstract class Game {
 
     public void setGameHistory(List<GameHistory> history) {
         this.gameHistory = history;
+    }
+
+    public void setGameID(String id) {
+        this.gameID = id;
     }
 
     public void addGameHistory(GameHistory g) {

@@ -227,4 +227,8 @@ public abstract class BoardGame extends Game implements TurnBased {
             System.out.println("Error writing game history data to " + FILENAME);
         }
     }
+
+    public void setBoardSizeFromUserInput() {};
+
+    public void setWinLengthFromUserInput() {};
 }

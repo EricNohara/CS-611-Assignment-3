@@ -22,7 +22,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Welcome to CS 611 Assignment 2.");
-        System.out.print("Please enter game to play (T/O): \t");
+        System.out.print("Please enter game to play (T/O/S): \t");
 
         String input;
         char inputChar;
@@ -31,7 +31,7 @@ public class Main {
             try {
                 input = scanner.next();
                 inputChar = Character.toUpperCase(input.charAt(0));
-                if (inputChar != 'O' && inputChar != 'T') throw new IllegalArgumentException();
+                if (inputChar != 'O' && inputChar != 'T' && inputChar != 'S') throw new IllegalArgumentException();
                 break;
             } catch (Exception e) {
                 System.out.print("Invalid input. Please enter game to play (T/O): \t");
@@ -39,11 +39,25 @@ public class Main {
         }
 
         BoardGame game;
+        Team[] teams = new Team[2]; // 2 teams
 
         if (inputChar == 'T') {
             game = new TicTacToe();
-        } else {
+            teams[0] = game.getTeamFromUserInput(0, "" + TicTacToe.TEAM_0_SYMBOL);
+            teams[1] = game.getTeamFromUserInput(1, "" + TicTacToe.TEAM_1_SYMBOL);
+            game.setTeams(teams);
+            game.setBoardSizeFromUserInput(); // only does stuff for tic tac toe games
+            game.setWinLengthFromUserInput(); // only for tic tac toe games
+        } else if (inputChar == 'O') {
             game = new OrderAndChaos();
+            teams[0] = game.getTeamFromUserInput(0, "ORDER");
+            teams[1] = game.getTeamFromUserInput(1, "CHAOS");
+            game.setTeams(teams);
+        } else {
+            game = new SuperTicTacToe();
+            teams[0] = game.getTeamFromUserInput(0, "" + TicTacToe.TEAM_0_SYMBOL);
+            teams[1] = game.getTeamFromUserInput(1, "" + TicTacToe.TEAM_1_SYMBOL);
+            game.setTeams(teams);
         }
 
         game.playGame();

@@ -26,93 +26,22 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class TicTacToe extends BoardGame {
+public class TicTacToe extends ConsecutivePiecesGame {
     // CLASS LEVEL CONSTANTS
-    private static final char TEAM_0_SYMBOL = 'X';
-    private static final char TEAM_1_SYMBOL = 'O';
+    public static final char TEAM_0_SYMBOL = 'X';
+    public static final char TEAM_1_SYMBOL = 'O';
     private static final String GAME_NAME = "Tic Tac Toe";
     private static final int MAX_ROWS = 40;
     private static final int MAX_COLUMNS = 40;
-
-    // OBJECT LEVEL CONSTANTS: since TicTacToe games can have different board sizes and win lengths
-    private final int winLength;
-    private final List<List<int[]>> winPositions;
+    private static final int DEFAULT_WIN_LENGTH = 3;
 
     // CONSTRUCTORS
     public TicTacToe() {
         super(GAME_NAME);
-
-         // set the teams 
-        Team[] teams = new Team[2]; // 2 teams
-        teams[0] = this.getTeamFromUserInput(0, "" + TEAM_0_SYMBOL);
-        teams[1] = this.getTeamFromUserInput(1, "" + TEAM_1_SYMBOL);
-        this.setTeams(teams);
-
-        // set the board size and type
-        setBoardSizeFromUserInput();
         this.getBoard().setGameType(GAME_NAME);
-
-        this.winLength = getWinLengthFromUserInput();
-        this.winPositions = generateWinPositions();
     }
 
-    // GETTER METHODS
-    public List<List<int[]>> getWinPositions() {
-        return this.winPositions;
-    }
-
-    public int getWinLength() {
-        return this.winLength;
-    }
-
-    // GENERATING ALL WIN CONDITIONS 
-    private List<List<int[]>> generateWinPositions() {
-        List<List<int[]>> positions = new ArrayList<>();
-        int numRows = this.getBoard().getRows();
-        int numCols = this.getBoard().getColumns();
-
-        // Horizontal wins
-        for (int r = 0; r < numRows; r++) {
-            for (int c = 0; c <= numCols - this.winLength; c++) {
-                List<int[]> position = new ArrayList<>();
-                for (int i = 0; i < this.winLength; i++) position.add(new int[] {r, c + i}); // add the coordinates
-                positions.add(position);
-            }
-        }
-
-        // Vertical wins
-        for (int c = 0; c < numCols; c++) {
-            for (int r = 0; r <= numRows - this.winLength; r++) {
-                List<int[]> position = new ArrayList<>();
-                for (int i = 0; i < this.winLength; i++) position.add(new int[] {r + i, c}); // add the coordinates
-                positions.add(position);
-            }
-        }
-
-        // Top left to bottom right diagonal
-        for (int r = 0; r <= numRows - this.winLength; r++) {
-            for (int c = 0; c <= numCols - this.winLength; c++) {
-                List<int[]> position = new ArrayList<>();
-                for (int i = 0; i < this.winLength; i++) position.add(new int[]{r + i, c + i});
-                positions.add(position);
-            }
-        }
-
-        // Top right to bottom left diagonal
-        for (int r = 0; r <= numRows - this.winLength; r++) {
-            for (int c = this.winLength - 1; c < numCols; c++) {
-                List<int[]> position = new ArrayList<>();
-                for (int i = 0; i < this.winLength; i++) {
-                    position.add(new int[]{r + i, c - i});
-                }
-                positions.add(position);
-            }
-        }
-
-        return positions;
-    }
-
-    // SET BOARD SIZE + WIN LENGTH FROM USER INPUT
+    // SET BOARD SIZE FROM USER INPUT
     public void setBoardSizeFromUserInput() {
         String input;
         int rows, columns;
@@ -146,33 +75,6 @@ public class TicTacToe extends BoardGame {
         }
     }
 
-    public int getWinLengthFromUserInput() {
-        String inputString;
-        int input;
-
-        System.out.print("Enter desired win length (pieces in a row to win) or leave blank to play default:\t");
-
-        Board board = this.getBoard();
-        int rows = board.getRows(), columns = board.getColumns();
-
-        while (true) {
-            try {
-                inputString = this.getScanner().nextLine().trim();
-                if (inputString.length() == 0) return Math.min(rows, columns);
-                input = Integer.parseInt(inputString);
-
-                if (input < 2 || input > Math.max(rows, columns)) {
-                    System.out.println("Invalid input. winLength \u2208 [2, max{" + rows + ", " + columns + "}]");
-                    throw new IllegalArgumentException();
-                }
-
-                return input;
-            } catch (Exception e) {
-                System.out.print("Please enter your desired grid size (rows, columns) or leave blank to play default game:\t");
-            }
-        }
-    }
-
     // ABSTRACT METHOD IMPLEMENTATIONS
     public void makeNextMove() {
         Team currentTeam = this.getCurrentTeam(); // the team whose turn it is currently
@@ -188,7 +90,7 @@ public class TicTacToe extends BoardGame {
         char symbol = this.getCurrentTeam().getNumber() == 0 ? TEAM_0_SYMBOL : TEAM_1_SYMBOL;
         Board board = this.getBoard();
 
-        for (List<int[]> position : this.winPositions) {
+        for (List<int[]> position : this.getWinPositions()) {
             for (int i = 0; i < position.size(); i++) {
                 int[] coordinate = position.get(i);
                 int x = coordinate[0], y = coordinate[1];

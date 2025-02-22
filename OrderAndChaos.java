@@ -27,77 +27,16 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderAndChaos extends BoardGame {
+public class OrderAndChaos extends ConsecutivePiecesGame {
     // CLASS LEVEL CONSTANTS
-    private static List<List<int[]>> winPositions; // every OrderAndChaos game has same win positions
-    private static final int winLength = 5; // need 5 in a row to win
+    private static final int DEFAULT_WIN_LENGTH = 5; // need 5 in a row to win
     private static final String GAME_NAME = "Order and Chaos";
 
     // CONSTRUCTORS
     public OrderAndChaos() {
         super(6,6, GAME_NAME);
-        this.winPositions = generateWinPositions();
-
-        // create and attach teams to the game object
-        Team[] teams = new Team[2];
-        teams[0] = this.getTeamFromUserInput(0, "ORDER");
-        teams[1] = this.getTeamFromUserInput(1, "CHAOS");
-        this.setTeams(teams);
-
-        // set the board type to Order And Chaos
+        this.setWinLength(DEFAULT_WIN_LENGTH);
         this.getBoard().setGameType(GAME_NAME);
-    }
-
-    // GETTER METHOD
-    public List<List<int[]>> getWinPositions() {
-        return this.winPositions;
-    }
-
-    // GENERATING ALL WIN CONDITIONS 
-    private List<List<int[]>> generateWinPositions() {
-        List<List<int[]>> positions = new ArrayList<>();
-        int numRows = this.getBoard().getRows();
-        int numCols = this.getBoard().getColumns();
-
-        // Horizontal wins
-        for (int r = 0; r < numRows; r++) {
-            for (int c = 0; c <= numCols - this.winLength; c++) {
-                List<int[]> position = new ArrayList<>();
-                for (int i = 0; i < this.winLength; i++) position.add(new int[] {r, c + i}); // add the coordinates
-                positions.add(position);
-            }
-        }
-
-        // Vertical wins
-        for (int c = 0; c < numCols; c++) {
-            for (int r = 0; r <= numRows - this.winLength; r++) {
-                List<int[]> position = new ArrayList<>();
-                for (int i = 0; i < this.winLength; i++) position.add(new int[] {r + i, c}); // add the coordinates
-                positions.add(position);
-            }
-        }
-
-        // Top left to bottom right diagonal
-        for (int r = 0; r <= numRows - this.winLength; r++) {
-            for (int c = 0; c <= numCols - this.winLength; c++) {
-                List<int[]> position = new ArrayList<>();
-                for (int i = 0; i < this.winLength; i++) position.add(new int[]{r + i, c + i});
-                positions.add(position);
-            }
-        }
-
-        // Top right to bottom left diagonal
-        for (int r = 0; r <= numRows - this.winLength; r++) {
-            for (int c = this.winLength - 1; c < numCols; c++) {
-                List<int[]> position = new ArrayList<>();
-                for (int i = 0; i < this.winLength; i++) {
-                    position.add(new int[]{r + i, c - i});
-                }
-                positions.add(position);
-            }
-        }
-
-        return positions;
     }
 
     // ABSTRACT METHOD IMPLEMENTATIONS
@@ -175,7 +114,7 @@ public class OrderAndChaos extends BoardGame {
     public boolean isWinner() {
         Board board = this.getBoard();
 
-        for (List<int[]> position : this.winPositions) {
+        for (List<int[]> position : this.getWinPositions()) {
             GamePiece[] pieces = new GamePiece[position.size()];
 
             for (int i = 0; i < position.size(); i++) {
