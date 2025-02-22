@@ -27,7 +27,7 @@ public class BoardGameHistory extends GameHistory {
 
     // CONSTRUCTOR
     public BoardGameHistory(Team winner, Board boardState, int totalTurns, int number) {
-        super(winner, totalTurns);
+        super(winner, number);
         this.boardState = boardState;
         this.totalTurns = totalTurns;
     }
