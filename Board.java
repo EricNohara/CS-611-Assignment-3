@@ -91,50 +91,59 @@ public class Board {
         this.gameType = type;
     }
 
-    // DISPLAY methods:
-    // helper function used to print the board width separators
-    private void displayBoardWidthSeparator() {
-        for (int i = 0; i < this.columns; i++) {
-            if (i == 0) System.out.print("   ");
-            System.out.print("+---");
-            if (i == this.columns - 1) System.out.println("+");
-        }
+    // VALIDATION method - if a cell on the board is filled or not
+    public boolean isBoardCellEmpty(int row, int column) {
+        return this.board[row][column].isEmpty();
     }
 
-    // method to display the current state of the board
-    public void displayBoard() {
-        String boardTop = new String();
-        
+    // DISPLAY methods:
+    // helper function used to get the board width separators
+    private String getBoardWidthSeperator() {
+        String seperator = "";
+
+        for (int i = 0; i < this.columns; i++) {
+            if (i == 0) seperator += "   ";
+            seperator += "+---";
+            if (i == this.columns - 1) seperator += "+\n";
+        }
+
+        return seperator;
+    }
+
+    // toString method to get the string representation of the board
+    public String toString() {
+        String board = "";
+
         for (int i = 0; i < this.rows; i++) {
             if (i == 0) {
-                System.out.print("     ");
+                board += "     ";
                 for (int c = 0; c < this.columns; c++) {
-                    if (c < 10) System.out.print(c + "   ");
-                    else System.out.print(c + "  ");
+                    if (c < 10) board += (c + "   ");
+                    else board += (c + "  ");
                 }
-                System.out.println();
+                board += "\n";
             }
-            this.displayBoardWidthSeparator();
+            board += this.getBoardWidthSeperator();
 
             for (int j = 0; j < this.columns; j++) {
                 if (j == 0) {
-                    if (i < 10) System.out.print(i + "  ");
-                    else System.out.print(i + " ");
+                    if (i < 10) board += (i + "  ");
+                    else board += (i + " ");
                 }
 
                 char cellValue = this.board[i][j].getValue() != null ? this.board[i][j].getValue().getSymbol() : ' ';
 
-                System.out.print("| " + cellValue + " ");
+                board += ("| " + cellValue + " ");
 
-                if (j == this.columns - 1) System.out.println("|");
+                if (j == this.columns - 1) board += "|\n";
             }
         }
 
-        this.displayBoardWidthSeparator();
+        board += this.getBoardWidthSeperator();
     }
 
-    // VALIDATION method - if a cell on the board is filled or not
-    public boolean isBoardCellEmpty(int row, int column) {
-        return this.board[row][column].isEmpty();
+    // method to display the current state of the board
+    public void displayBoard() {       
+        System.out.print(this.toString());
     }
 }
