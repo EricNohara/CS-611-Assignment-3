@@ -24,7 +24,6 @@
     - generateWinPositions(): Generates all possible horizontal, vertical, and diagonal win conditions.  
 */
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OrderAndChaos extends ConsecutivePiecesGame {

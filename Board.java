@@ -98,20 +98,19 @@ public class Board {
 
     // DISPLAY methods:
     // helper function used to get the board width separators
-    private String getBoardWidthSeperator() {
+    private String getBoardWidthSeperator(boolean withNumbers) {
         String seperator = "";
 
         for (int i = 0; i < this.columns; i++) {
-            if (i == 0) seperator += "   ";
+            if (i == 0 && withNumbers) seperator += "   ";
             seperator += "+---";
-            if (i == this.columns - 1) seperator += "+\n";
         }
 
-        return seperator;
+        return seperator + "+\n";
     }
 
     // toString method to get the string representation of the board
-    public String toString() {
+    public String toStringWithNumbers() {
         String board = "";
 
         for (int i = 0; i < this.rows; i++) {
@@ -123,7 +122,7 @@ public class Board {
                 }
                 board += "\n";
             }
-            board += this.getBoardWidthSeperator();
+            board += this.getBoardWidthSeperator(true);
 
             for (int j = 0; j < this.columns; j++) {
                 if (j == 0) {
@@ -139,13 +138,33 @@ public class Board {
             }
         }
 
-        board += this.getBoardWidthSeperator();
+        board += this.getBoardWidthSeperator(true);
+
+        return board;
+    }
+
+    public String toString() {
+        String board = "";
+
+        for (int i = 0; i < this.rows; i++) {
+            board += this.getBoardWidthSeperator(false);
+
+            for (int j = 0; j < this.columns; j++) {
+                char cellValue = this.board[i][j].getValue() != null ? this.board[i][j].getValue().getSymbol() : ' ';
+
+                board += ("| " + cellValue + " ");
+
+                if (j == this.columns - 1) board += "|\n";
+            }
+        }
+
+        board += this.getBoardWidthSeperator(false);
 
         return board;
     }
 
     // method to display the current state of the board
     public void displayBoard() {       
-        System.out.print(this.toString());
+        System.out.print(this.toStringWithNumbers());
     }
 }

@@ -23,7 +23,6 @@
     - generateWinPositions(): Generates all possible winning positions on the board (called in constructor).
 */
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TicTacToe extends ConsecutivePiecesGame {
@@ -34,10 +33,17 @@ public class TicTacToe extends ConsecutivePiecesGame {
     private static final int MAX_ROWS = 40;
     private static final int MAX_COLUMNS = 40;
     private static final int DEFAULT_WIN_LENGTH = 3;
+    private static final int DEFAULT_ROWS = 3;
+    private static final int DEFAULT_COLS = 3;
 
     // CONSTRUCTORS
     public TicTacToe() {
-        super(GAME_NAME);
+        super(DEFAULT_ROWS, DEFAULT_COLS, GAME_NAME);
+        this.getBoard().setGameType(GAME_NAME);
+    }
+
+    public TicTacToe(String gameID) {
+        super(DEFAULT_ROWS, DEFAULT_COLS, GAME_NAME, gameID);
         this.getBoard().setGameType(GAME_NAME);
     }
 

@@ -33,8 +33,6 @@
 
 
 import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.List;
 import java.io.File;  
 import java.io.FileWriter;
 import java.io.IOException; 
@@ -59,6 +57,14 @@ public abstract class BoardGame extends Game implements TurnBased {
 
     public BoardGame(int rows, int columns, String name) {
         super(name);
+        this.board = new Board(rows, columns);
+        this.turnNumber = 0;
+        this.scanner = new Scanner(System.in);
+        this.gameNumber = 1;
+    }
+
+    public BoardGame(int rows, int columns, String name, String gameID) {
+        super(name, gameID);
         this.board = new Board(rows, columns);
         this.turnNumber = 0;
         this.scanner = new Scanner(System.in);

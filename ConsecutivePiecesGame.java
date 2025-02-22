@@ -18,6 +18,12 @@ public abstract class ConsecutivePiecesGame extends BoardGame {
         this.winPositions = generateWinPositions();
     }
 
+    public ConsecutivePiecesGame(int rows, int cols, String name, String gameID) {
+        super(rows, cols, name, gameID);
+        this.winLength = DEFALT_LENGTH;
+        this.winPositions = generateWinPositions();
+    }
+
     // GETTER methods
     public int getWinLength() {
         return this.winLength;

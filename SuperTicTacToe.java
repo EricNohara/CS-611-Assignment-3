@@ -1,12 +1,10 @@
 import java.util.List;
-import java.util.ArrayList;
 
 public class SuperTicTacToe extends ConsecutivePiecesGame {
     private static final int ROWS = 3;
     private static final int COLS = 3;
     private static final String GAME_NAME = "Super Tic Tac Toe";
     private static final int DEFAULT_WIN_LENGTH = 3;
-    // private static final List<List<int[]>> winPositions = generateWinPositions();
 
     TicTacToe[][] games = new TicTacToe[ROWS][COLS]; // 3x3 board of tic tac toe games 
 
@@ -16,9 +14,25 @@ public class SuperTicTacToe extends ConsecutivePiecesGame {
 
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
-                games[r][c] = new TicTacToe();
+                games[r][c] = new TicTacToe("A"); // update this later
             }
         }
+    }
+
+    // USER INPUT METHOD:
+    // public String 
+
+    // DISPLAY METHOD
+    public void displayGame() {
+        String gameStr = "";
+
+        for (TicTacToe[] gameRow : games) {
+            for (TicTacToe game : gameRow) {
+                gameStr += game.getBoard().toString();
+            }
+        }
+
+        System.out.print(gameStr);
     }
 
     // ABSTRACT METHOD IMPLEMENTATIONS
@@ -38,8 +52,13 @@ public class SuperTicTacToe extends ConsecutivePiecesGame {
         return false;
     }
 
-    public void makeNextMove() {}
+    public void makeNextMove() {
+        Team currentTeam = this.getCurrentTeam(); // the team whose turn it is currently
+        Player currentPlayer = currentTeam.getRandomPlayer(); // get a random player from the current team
+    }
 
-    public void playGame() {}
+    public void playGame() {
+        this.displayGame();
+    }
 
 }
