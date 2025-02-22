@@ -1,4 +1,4 @@
-# CS611-Assignment 2
+# CS611-Assignment 3
 
 ## Tic-Tac-Toe and other Variants
 

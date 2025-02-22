@@ -140,6 +140,8 @@ public class Board {
         }
 
         board += this.getBoardWidthSeperator();
+
+        return board;
     }
 
     // method to display the current state of the board

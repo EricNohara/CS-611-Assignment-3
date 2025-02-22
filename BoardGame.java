@@ -84,7 +84,13 @@ public abstract class BoardGame extends Game implements TurnBased {
     }
 
     public boolean getIsBoardFull() {
-        return this.turnNumber == (this.board.getRows() * this.board.getColumns() - 1);
+        // check if there are any empty cells left on the board
+        for (Cell[] row : this.board.getBoard()) {
+            for (Cell cell : row) {
+                if (cell.getValue() == null) return false;
+            }
+        }
+        return true;
     }
 
     public int getGameNumber() {
