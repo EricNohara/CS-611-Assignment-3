@@ -4,35 +4,97 @@ public class SuperTicTacToe extends ConsecutivePiecesGame {
     private static final int ROWS = 3;
     private static final int COLS = 3;
     private static final String GAME_NAME = "Super Tic Tac Toe";
-    private static final int DEFAULT_WIN_LENGTH = 3;
 
-    TicTacToe[][] games = new TicTacToe[ROWS][COLS]; // 3x3 board of tic tac toe games 
+    private TicTacToe[][] games = new TicTacToe[ROWS][COLS]; // 3x3 board of tic tac toe games 
+    private Board[][] boards = new Board[ROWS][COLS];
 
     public SuperTicTacToe() {
-        super(GAME_NAME);
-        this.setWinLength(DEFAULT_WIN_LENGTH);
+        super(ROWS, COLS, GAME_NAME);
 
+        char gameID = 'A';
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
-                games[r][c] = new TicTacToe("A"); // update this later
+                games[r][c] = new TicTacToe(gameID + ""); // update this later
+                boards[r][c] = games[r][c].getBoard();
+                games[r][c].setTeams(this.getTeams());
+                gameID++;
             }
         }
     }
 
-    // USER INPUT METHOD:
-    // public String 
+    // GETTER methods
+    public TicTacToe[][] getGames() {
+        return this.games;
+    }
 
-    // DISPLAY METHOD
-    public void displayGame() {
-        String gameStr = "";
+    public Board[][] getBoards() {
+        return this.boards;
+    }
 
-        for (TicTacToe[] gameRow : games) {
+    // returns the game associated with the give id
+    public TicTacToe getGameByID(String id) {
+        for (TicTacToe[] gameRow : this.games) {
             for (TicTacToe game : gameRow) {
-                gameStr += game.getBoard().toString();
+                if (game.getGameID().equals(id)) return game;
             }
         }
 
-        System.out.print(gameStr);
+        return null;
+    }
+    
+    // SETTER methods
+    public void setGames(TicTacToe[][] games) {
+        this.games = games;
+    }
+
+    public void setBoards(Board[][] boards) {
+        this.boards = boards;
+    }
+
+    // USER INPUT METHOD:
+    public TicTacToe getGameFromUserInput(Team team, Player player) {
+        String input;
+        char inputChar;
+
+        System.out.print("[TEAM " + team.getName() + "] " + player.getName() + " enter the game grid ID to make a move (A-I):\t");
+
+        while(true) {
+            try {
+                input = this.getScanner().next();
+                inputChar = Character.toUpperCase(input.charAt(0));
+                if (inputChar < 'A' || inputChar > 'I') throw new IllegalArgumentException();
+                input = inputChar + ""; // convert it to a string since all IDs are strings
+                break;
+            } catch (Exception e) {
+                System.out.print("Invalid input. Please enter a valid game ID (A-I): \t");
+            }
+        }
+
+        return this.getGameByID(input);
+    }
+
+    // DISPLAY METHOD
+    public void displayGame() {
+        System.out.println(Board.boardsToString(this.boards));
+    }
+
+    // resets every individual tic tac toe board
+    public void resetGameBoards() {
+        for (TicTacToe[] gameRow : games) {
+            for (TicTacToe game : gameRow) {
+                Board board = game.getBoard();
+                game.setBoard(new Board(board.getRows(), board.getColumns(), TicTacToe.GAME_NAME));
+            }
+         }
+    }
+
+    public boolean allGamesFinished() {
+        for (TicTacToe[] gameRow : games) {
+            for (TicTacToe game : gameRow) {
+                if (game.getWinner() == null && !game.getIsBoardFull()) return false; // if there is a game without a winner that is not tied yet
+            }
+        }
+        return true;
     }
 
     // ABSTRACT METHOD IMPLEMENTATIONS
@@ -44,7 +106,10 @@ public class SuperTicTacToe extends ConsecutivePiecesGame {
             for (int i = 0; i < position.size(); i++) {
                 int[] coordinate = position.get(i);
                 int x = coordinate[0], y = coordinate[1];
-                if (!games[x][y].getWinner().equals(currentTeam)) break;
+
+                Team currentGameWinner = games[x][y].getWinner();
+
+                if (currentGameWinner == null || games[x][y].getWinner().getNumber() != currentTeam.getNumber()) break;
                 if (i == position.size() - 1) return true;
             }
         }
@@ -55,10 +120,47 @@ public class SuperTicTacToe extends ConsecutivePiecesGame {
     public void makeNextMove() {
         Team currentTeam = this.getCurrentTeam(); // the team whose turn it is currently
         Player currentPlayer = currentTeam.getRandomPlayer(); // get a random player from the current team
+
+        TicTacToe game = this.getGameFromUserInput(currentTeam, currentPlayer);
+        Board gameBoard = game.getBoard();
+        Cell inputCell = this.getNextPlayerInputCell(currentTeam, currentPlayer, gameBoard); // get the input cell for the selected game board
+
+        GamePiece piece = currentTeam.getNumber() == 0 ? new GamePiece(TicTacToe.TEAM_0_SYMBOL) : new GamePiece(TicTacToe.TEAM_1_SYMBOL);
+        game.makeMove(inputCell, piece, currentTeam, this.getTurnNumber(), currentPlayer);
     }
 
     public void playGame() {
         this.displayGame();
+
+        while (true) {
+            this.makeNextMove();
+            this.displayGame();
+            
+            Team currentTeam = this.getCurrentTeam();
+            boolean teamWon = this.isWinner();
+
+            if (teamWon) {
+                this.setWinner(currentTeam);
+                System.out.println("Congratulations team " + currentTeam.getName() + "! You won the game!");
+
+                currentTeam.incrementPlayerwinCounts();
+                this.reset(GAME_NAME);
+                this.resetGameBoards();
+
+                if (this.isUserDone()) break;
+                else this.displayGame();
+            } else if (this.allGamesFinished()) {
+                System.out.println("The game has ended in a tie.");
+
+                this.reset(GAME_NAME);
+                this.resetGameBoards();
+
+                if (this.isUserDone()) break;
+                else this.displayGame();
+            } else {
+                this.incrementTurnNumber();
+            }
+        }
     }
 
 }

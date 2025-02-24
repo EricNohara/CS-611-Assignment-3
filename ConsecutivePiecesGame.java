@@ -2,25 +2,25 @@ import java.util.List;
 import java.util.ArrayList;
 
 public abstract class ConsecutivePiecesGame extends BoardGame {
-    private final int DEFALT_LENGTH = 3;
+    private final int DEFAULT_LENGTH = 3;
     private int winLength;
     private List<List<int[]>> winPositions;
 
     public ConsecutivePiecesGame(String name) {
         super(name);
-        this.winLength = DEFALT_LENGTH;
+        this.winLength = DEFAULT_LENGTH;
         this.winPositions = generateWinPositions();
     }
 
     public ConsecutivePiecesGame(int rows, int cols, String name) {
         super(rows, cols, name);
-        this.winLength = DEFALT_LENGTH;
+        this.winLength = DEFAULT_LENGTH;
         this.winPositions = generateWinPositions();
     }
 
     public ConsecutivePiecesGame(int rows, int cols, String name, String gameID) {
         super(rows, cols, name, gameID);
-        this.winLength = DEFALT_LENGTH;
+        this.winLength = DEFAULT_LENGTH;
         this.winPositions = generateWinPositions();
     }
 

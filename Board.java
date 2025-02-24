@@ -106,7 +106,7 @@ public class Board {
             seperator += "+---";
         }
 
-        return seperator + "+\n";
+        return seperator + "+";
     }
 
     // toString method to get the string representation of the board
@@ -123,6 +123,7 @@ public class Board {
                 board += "\n";
             }
             board += this.getBoardWidthSeperator(true);
+            board += "\n";
 
             for (int j = 0; j < this.columns; j++) {
                 if (j == 0) {
@@ -139,6 +140,7 @@ public class Board {
         }
 
         board += this.getBoardWidthSeperator(true);
+        board += "\n";
 
         return board;
     }
@@ -148,6 +150,7 @@ public class Board {
 
         for (int i = 0; i < this.rows; i++) {
             board += this.getBoardWidthSeperator(false);
+            board += "\n";
 
             for (int j = 0; j < this.columns; j++) {
                 char cellValue = this.board[i][j].getValue() != null ? this.board[i][j].getValue().getSymbol() : ' ';
@@ -166,5 +169,58 @@ public class Board {
     // method to display the current state of the board
     public void displayBoard() {       
         System.out.print(this.toStringWithNumbers());
+    }
+
+    private String getBoardRow(Board board, int row) {
+        String seperator = "";
+
+        for (int i = 0; i < board.getColumns(); i++) 
+            seperator += "+---";
+        
+
+        return seperator + "+";
+    }
+
+    // method to display multiple boards in an array of boards
+    private static String getBoardSeperator(int numCols, int numBoards) {
+        String seperator = "";
+
+        for (int b = 0; b < numBoards; b++) {
+            for (int i = 0; i < numCols; i++) seperator += "+---";
+            seperator += "+ ";
+        }
+
+        return seperator;        
+    }
+
+    private static String boardRowToString(Board b, int row) {
+        String str = "| ";
+        for (int col = 0; col < b.getColumns(); col++) {
+            char val = b.getCell(row, col).getValue() == null ? ' ' : b.getCell(row, col).getValue().getSymbol(); // if null then put empty space there
+            str += (val + " | ");
+        }
+        return str;
+    }
+
+    public static String boardsToString(Board[][] boards) {
+        int gridRows = boards.length, gridCols = boards[0].length;
+        int boardRows = boards[0][0].getRows(), boardCols = boards[0][0].getColumns();
+        String seperator = getBoardSeperator(boardCols, gridCols) + "\n";
+        String str = seperator;
+
+        for (int gr = 0; gr < gridRows; gr++) {
+            for (int br = 0; br < boardRows; br++) {
+                for (Board board : boards[gr]) {
+                    str += boardRowToString(board, br);
+                }
+
+                str += "\n";
+                str += seperator;
+            }
+            
+            if (gr < gridRows - 1) str += seperator;
+        }
+
+        return str;
     }
 }

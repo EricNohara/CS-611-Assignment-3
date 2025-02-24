@@ -62,5 +62,6 @@ public class Main {
 
         game.playGame();
         game.exitGame();
+        scanner.close();
     }
 }

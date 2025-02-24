@@ -29,7 +29,7 @@ public class TicTacToe extends ConsecutivePiecesGame {
     // CLASS LEVEL CONSTANTS
     public static final char TEAM_0_SYMBOL = 'X';
     public static final char TEAM_1_SYMBOL = 'O';
-    private static final String GAME_NAME = "Tic Tac Toe";
+    public static final String GAME_NAME = "Tic Tac Toe";
     private static final int MAX_ROWS = 40;
     private static final int MAX_COLUMNS = 40;
     private static final int DEFAULT_WIN_LENGTH = 3;
@@ -81,6 +81,33 @@ public class TicTacToe extends ConsecutivePiecesGame {
         }
     }
 
+    public void makeMove(Cell input, GamePiece piece, Team team, int turnNumber, Player player) {
+        input.setAllFields(piece, team, turnNumber, player);
+        if (this.isWinner(team)) {
+            System.out.println(team.getName() + " won board " + this.getGameID());
+            this.setWinner(team);
+        }
+    }
+
+    public boolean isWinner(Team team) {
+        if (this.getWinner() != null) return false; // if there is already a winner, then return false immediately
+        
+        char symbol = team.getNumber() == 0 ? TEAM_0_SYMBOL : TEAM_1_SYMBOL;
+        Board board = this.getBoard();
+
+        for (List<int[]> position : this.getWinPositions()) {
+            for (int i = 0; i < position.size(); i++) {
+                int[] coordinate = position.get(i);
+                int x = coordinate[0], y = coordinate[1];
+                GamePiece piece = board.getCell(x, y).getValue();
+                if (piece == null || piece.getSymbol() != symbol) break;
+                if (i == position.size() - 1) return true;
+            }
+        }
+
+        return false; // if got to here, no direction yeilds a win condition
+    }
+
     // ABSTRACT METHOD IMPLEMENTATIONS
     public void makeNextMove() {
         Team currentTeam = this.getCurrentTeam(); // the team whose turn it is currently
@@ -93,6 +120,8 @@ public class TicTacToe extends ConsecutivePiecesGame {
     }
 
     public boolean isWinner() {
+        if (this.getWinner() != null) return false; // if there is already a winner, then return false immediately
+        
         char symbol = this.getCurrentTeam().getNumber() == 0 ? TEAM_0_SYMBOL : TEAM_1_SYMBOL;
         Board board = this.getBoard();
 

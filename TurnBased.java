@@ -18,6 +18,6 @@ interface TurnBased {
     Team getCurrentTeam();
     void incrementTurnNumber();
     void resetTurnNumber();
-    void makeNextMove();
+    void makeNextMove(); 
     boolean isValidMove(int row, int column);
 }
