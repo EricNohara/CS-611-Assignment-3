@@ -83,6 +83,7 @@ public class TicTacToe extends ConsecutivePiecesGame {
 
     public void makeMove(Cell input, GamePiece piece, Team team, int turnNumber, Player player) {
         input.setAllFields(piece, team, turnNumber, player);
+        this.incrementTurnNumber();
         if (this.isWinner(team)) {
             System.out.println(team.getName() + " won board " + this.getGameID());
             this.setWinner(team);

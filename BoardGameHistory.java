@@ -24,12 +24,21 @@ public class BoardGameHistory extends GameHistory {
     // READ ONLY: history cannot be changed
     private final Board boardState;
     private final int totalTurns;
+    private String gameID;
 
     // CONSTRUCTOR
     public BoardGameHistory(Team winner, Board boardState, int totalTurns, int number) {
         super(winner, number);
         this.boardState = boardState;
         this.totalTurns = totalTurns;
+        this.gameID = null;
+    }
+
+    public BoardGameHistory(Team winner, Board boardState, int totalTurns, int number, String gameID) {
+        super(winner, number);
+        this.boardState = boardState;
+        this.totalTurns = totalTurns;
+        this.gameID = gameID;
     }
     
     // GETTER methods
@@ -41,9 +50,14 @@ public class BoardGameHistory extends GameHistory {
         return this.totalTurns;
     }
 
+    public String getGameID() {
+        return this.gameID;
+    }
+
     // TO STRING METHOD
     public String toString() {
         String data = "GAME NUMBER:\t" + this.getGameNumber() + "\n";
+        if (this.gameID != null) data += "GAME ID:\t" + this.gameID + "\n";
         data += "GAME NAME:\t" + this.boardState.getGameType() + "\n";
 
         if (this.getWinner() != null) data += "WINNER TEAM:\tTeam " + this.getWinner().getName() + "\n";

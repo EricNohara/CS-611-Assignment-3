@@ -121,7 +121,7 @@ public abstract class BoardGame extends Game implements TurnBased {
     }
 
     public void reset(String gameType) {
-        this.addGameHistory(new BoardGameHistory(this.getWinner(), board, this.turnNumber + 1, this.gameNumber));
+        this.addGameHistory(new BoardGameHistory(this.getWinner(), this.board, this.turnNumber + 1, this.gameNumber));
         this.board = new Board(board.getRows(), board.getColumns(), gameType);
         this.resetTurnNumber();
         this.incrementGameNumber();

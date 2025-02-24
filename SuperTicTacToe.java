@@ -10,11 +10,12 @@ public class SuperTicTacToe extends ConsecutivePiecesGame {
 
     public SuperTicTacToe() {
         super(ROWS, COLS, GAME_NAME);
+        this.getBoard().setGameType(GAME_NAME);
 
         char gameID = 'A';
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
-                games[r][c] = new TicTacToe(gameID + ""); // update this later
+                games[r][c] = new TicTacToe(gameID + "");
                 boards[r][c] = games[r][c].getBoard();
                 games[r][c].setTeams(this.getTeams());
                 gameID++;
@@ -83,6 +84,7 @@ public class SuperTicTacToe extends ConsecutivePiecesGame {
         for (TicTacToe[] gameRow : games) {
             for (TicTacToe game : gameRow) {
                 Board board = game.getBoard();
+                this.addGameHistory(new BoardGameHistory(game.getWinner(), board, game.getTurnNumber(), this.getGameNumber() - 1, game.getGameID()));
                 game.setBoard(new Board(board.getRows(), board.getColumns(), TicTacToe.GAME_NAME));
             }
          }
