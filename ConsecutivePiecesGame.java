@@ -1,8 +1,31 @@
+/*
+    Description:
+    The ConsecutivePiecesGame class is an abstract subclass of BoardGame, representing board games where players must get a 
+    certain number of pieces in a row to win. It manages win conditions and dynamically calculates possible winning positions.
+
+    Instance Variables:
+    - DEFAULT_LENGTH: Class level constant default number of consecutive pieces required to win.
+    - winLength: The current win length (modifiable by user input).
+    - winPositions: A list of all possible winning positions on the board.
+
+    Constructors:
+    - public ConsecutivePiecesGame(String name): Initializes a game with a default board size and win conditions.
+    - public ConsecutivePiecesGame(int rows, int cols, String name): Initializes a game with a custom board size.
+    - public ConsecutivePiecesGame(int rows, int cols, String name, String gameID): Initializes a game with a custom board 
+      size and an optional game ID (used in Super).
+
+    Important Methods:
+    - getWinPositions(): Returns all possible winning positions.
+    - getWinLengthFromUserInput(): Prompts the user to specify a win length, ensuring valid input.
+    - setWinLengthFromUserInput(): Updates the win length based on user input.
+    - generateWinPositions(): Generates and stores all possible winning positions (horizontal, vertical, and diagonal).
+*/
+
 import java.util.List;
 import java.util.ArrayList;
 
 public abstract class ConsecutivePiecesGame extends BoardGame {
-    private final int DEFAULT_LENGTH = 3;
+    private static final int DEFAULT_LENGTH = 3;
     private int winLength;
     private List<List<int[]>> winPositions;
 

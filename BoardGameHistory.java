@@ -12,8 +12,9 @@
     final board state, total turns, and game number.  
 
     Important Methods:  
-    - toString(): Returns a formatted string representing the game history, including game details, winner, board size, and a sorted list of moves.  
-        uses a TreeMap to iterate over the board cells in row major order and sppending them to the final string in sorted order by turn.
+    - toString(): Returns a formatted string representing the game history, including game details, winner, board size, and a sorted list of moves. 
+    Uses a TreeMap to iterate over the board cells in row major order and sppending them to the final string in sorted order by turn.
+    Prints out the game ID if the game is a subgame of SuperTicTacToe.
 */
 
 

@@ -2,7 +2,7 @@
     Description:  
     The Board class represents a game board consisting of a grid of Cell objects.
     It provides methods to manage the board state, retrieve board information, 
-    and display the board in a structured format.
+    and display the board/boards in a structured format.
 
     Fields:  
     - rows: The number of rows in the board.  
@@ -15,10 +15,15 @@
     - Board(int rows, int columns): Creates a board with specified dimensions and initializes all cells.  
     - Board(int rows, int columns, String type): Creates a board with specified dimensions and game type.  
 
-    Important Methods:  
+    Static Methods:
+    - boardsToString(Board[][] boards): returns a string representation of a 2D array of boards
+    - displayBoards(Board[][] boards): prints the current state of the 2D array of boards
+
+    Other Important Methods:  
     - getCell(int row, int column): Returns the Cell object at the specified coordinates.  
     - displayBoard(): Prints the current state of the board with row and column labels.  
-    - isBoardCellEmpty(int row, int column): Checks if the specified cell on the board is empty.  
+    - isBoardCellEmpty(int row, int column): Checks if the specified cell on the board is empty.
+    - toString(): returns the string representation of a board.
  */
 
 public class Board {
@@ -110,7 +115,7 @@ public class Board {
     }
 
     // toString method to get the string representation of the board
-    public String toStringWithNumbers() {
+    public String toString() {
         String board = "";
 
         for (int i = 0; i < this.rows; i++) {
@@ -145,43 +150,11 @@ public class Board {
         return board;
     }
 
-    public String toString() {
-        String board = "";
-
-        for (int i = 0; i < this.rows; i++) {
-            board += this.getBoardWidthSeperator(false);
-            board += "\n";
-
-            for (int j = 0; j < this.columns; j++) {
-                char cellValue = this.board[i][j].getValue() != null ? this.board[i][j].getValue().getSymbol() : ' ';
-
-                board += ("| " + cellValue + " ");
-
-                if (j == this.columns - 1) board += "|\n";
-            }
-        }
-
-        board += this.getBoardWidthSeperator(false);
-
-        return board;
-    }
-
-    // method to display the current state of the board
     public void displayBoard() {       
-        System.out.print(this.toStringWithNumbers());
+        System.out.print(this.toString());
     }
 
-    private String getBoardRow(Board board, int row) {
-        String seperator = "";
-
-        for (int i = 0; i < board.getColumns(); i++) 
-            seperator += "+---";
-        
-
-        return seperator + "+";
-    }
-
-    // method to display multiple boards in an array of boards
+    // STATIC DISPLAY METHODS 
     private static String getBoardSeperator(int numCols, int numBoards) {
         String seperator = "";
 
@@ -222,5 +195,9 @@ public class Board {
         }
 
         return str;
+    }
+
+    public static void displayBoards(Board[][] boards) {
+        System.out.println(boardsToString(boards));
     }
 }

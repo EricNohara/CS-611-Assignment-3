@@ -15,25 +15,17 @@
     Constructors:  
     - Game(): Initializes a game with default teams (2 teams, each with 1 player).  
     - Game(String name): Initializes a game with the specified name and default teams.  
-
-    Getter Methods:  
-    - getTeams(): Returns the array of teams participating in the game.  
-    - getWinner(): Returns the team that won the game.  
-    - getName(): Returns the name of the game.  
-    - getGameHistory(): Returns the list of game history records.  
-    - getTeamByName(String name): Returns the team with the specified name.  
-
-    Setter Methods:  
-    - setTeams(Team[] teams): Sets the teams participating in the game.  
-    - setWinner(Team winner): Sets the winning team.  
-    - setName(String name): Sets the name of the game.  
-    - setGameHistory(List<GameHistory> history): Sets the game history.  
-    - addGameHistory(GameHistory g): Adds a game history record.  
+    - Game(String name, String gameID): initializes a game with the specified name and game ID (used in Super)
 
     Abstract Methods:  
     - playGame(): Must be implemented to define the logic for playing the game.  
     - isWinner(): Must be implemented to determine if a winner has been decided.  
     - exitGame(): Must be implemented to handle the actions required when the game is exited.  
+
+    Other Important Methods:
+    - getTeamByName(String name): Returns the team with the specified name.  
+    - setGameHistory(List<GameHistory> history): Sets the game history.  
+    - addGameHistory(GameHistory g): Adds a game history record.  
 */
 
 import java.util.ArrayList;

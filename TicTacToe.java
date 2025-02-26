@@ -1,16 +1,19 @@
 /*
     Description:
-    Class describing the Tic Tac Toe game which implements the abstract methods of BoardGame.
+    Class for the Tic Tac Toe game which implements the abstract methods of ConsecutivePiecesGame.
 
-    Fields:
-    - TEAM_0_SYMBOL: class level constant for any Tic Tac Toe game.
-    - TEAM_1_SYMBOL: class level constant for any Tic Tac Toe game.
-    - GAME_NAME: class level constant for any Tic Tac Toe game.
-    - MAX_ROWS: class level constant for any Tic Tac Toe game.
-    - MAX_COLUMNS: class level constant for any Tic Tac Toe game.
-    - winLength: constant that defines the number of pieces in a row needed for a user to win.
-    - winPositions: constant calculated at construction time which contains all possible winning
-                    positions given the board size and winLength.
+    Class Level Constants:
+    - TEAM_0_SYMBOL: default team symbol
+    - TEAM_1_SYMBOL: default team symbol
+    - GAME_NAME: default game name
+    - MAX_ROWS: default max input for this field
+    - MAX_COLUMNS: default max input for this field
+    - DEFAULT_ROWS: default number of rows on the board
+    - DEFAULT_COLS:  default number of cols on the board
+
+    Constructors:
+    - public TicTacToe(): creates a generic TicTacToe game based off of user inputted fields
+    - public TicTacToe(String gameID): creates a simple TicTacToe game with a given game id without user input (used in SuperTicTacToe)
 
     Abstract Method Implementations:
     - playGame(): runs the game loop, allowing players to take turns until a winner is found or the game ends in a tie.
@@ -19,8 +22,8 @@
 
     Important Methods:
     - setBoardSizeFromUserInput(): Prompts the user for board size and initializes the board accordingly.
-    - getWinLengthFromUserInput(): Prompts the user for the win condition (pieces in a row to win).
-    - generateWinPositions(): Generates all possible winning positions on the board (called in constructor).
+    - makeMove(Cell input, GamePiece piece, Team team, int turnNumber, Player player): makes a generic move based off of inputted values (used in Super)
+    - isWinner(Team team): checks if the inputted team is the winner of the game (used in Super)
 */
 
 import java.util.List;
@@ -32,7 +35,6 @@ public class TicTacToe extends ConsecutivePiecesGame {
     public static final String GAME_NAME = "Tic Tac Toe";
     private static final int MAX_ROWS = 40;
     private static final int MAX_COLUMNS = 40;
-    private static final int DEFAULT_WIN_LENGTH = 3;
     private static final int DEFAULT_ROWS = 3;
     private static final int DEFAULT_COLS = 3;
 
@@ -40,14 +42,18 @@ public class TicTacToe extends ConsecutivePiecesGame {
     public TicTacToe() {
         super(DEFAULT_ROWS, DEFAULT_COLS, GAME_NAME);
         this.getBoard().setGameType(GAME_NAME);
+        this.setTeamsFromUserInput("" + TEAM_0_SYMBOL, "" + "" + TEAM_1_SYMBOL);
+        this.setBoardSizeFromUserInput();
+        this.setWinLengthFromUserInput(); 
     }
 
+    // simple TicTacToe constructor used in SuperTicTacToe
     public TicTacToe(String gameID) {
         super(DEFAULT_ROWS, DEFAULT_COLS, GAME_NAME, gameID);
         this.getBoard().setGameType(GAME_NAME);
     }
 
-    // SET BOARD SIZE FROM USER INPUT
+    // USER INPUT METHOD
     public void setBoardSizeFromUserInput() {
         String input;
         int rows, columns;
@@ -81,6 +87,8 @@ public class TicTacToe extends ConsecutivePiecesGame {
         }
     }
 
+    // SUPER TICTACTOE UTILITY METHODS
+    // used to make a generic move given all information about the move
     public void makeMove(Cell input, GamePiece piece, Team team, int turnNumber, Player player) {
         input.setAllFields(piece, team, turnNumber, player);
         this.incrementTurnNumber();
@@ -90,6 +98,7 @@ public class TicTacToe extends ConsecutivePiecesGame {
         }
     }
 
+    // used to determine if a given team is the winner
     public boolean isWinner(Team team) {
         if (this.getWinner() != null) return false; // if there is already a winner, then return false immediately
         
@@ -121,22 +130,7 @@ public class TicTacToe extends ConsecutivePiecesGame {
     }
 
     public boolean isWinner() {
-        if (this.getWinner() != null) return false; // if there is already a winner, then return false immediately
-        
-        char symbol = this.getCurrentTeam().getNumber() == 0 ? TEAM_0_SYMBOL : TEAM_1_SYMBOL;
-        Board board = this.getBoard();
-
-        for (List<int[]> position : this.getWinPositions()) {
-            for (int i = 0; i < position.size(); i++) {
-                int[] coordinate = position.get(i);
-                int x = coordinate[0], y = coordinate[1];
-                GamePiece piece = board.getCell(x, y).getValue();
-                if (piece == null || piece.getSymbol() != symbol) break;
-                if (i == position.size() - 1) return true;
-            }
-        }
-
-        return false; // if got to here, no direction yeilds a win condition
+        return isWinner(this.getCurrentTeam());
     }
 
     public void playGame() {

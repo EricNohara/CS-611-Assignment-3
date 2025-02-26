@@ -13,7 +13,8 @@
 
     Constructors:  
     - BoardGame(String name): Initializes a board game with default board size.  
-    - BoardGame(int rows, int columns, String name): Initializes a board game with a custom board size.  
+    - BoardGame(int rows, int columns, String name): Initializes a board game with a custom board size. 
+    - BoardGame(int rows, int columns, String name, String gameID): initializes all of the above plus the game id field. 
 
     Abstract Method Implementations:
     - exitGame(): Saves game history to a file before exiting.  
@@ -29,6 +30,7 @@
     - getTeamFromUserInput(int number, String name): Gets team input from the user.  
     - isUserDone(): Checks if the user wants to continue playing.  
     - getNextPlayerInputCell(Team team, Player player): Gets the player's move input.  
+    - getNextPlayerInputCell(Team team, Player player, Board board): Gets the player's move for a specific board (used in Super)
 */
 
 
@@ -130,7 +132,7 @@ public abstract class BoardGame extends Game implements TurnBased {
 
     // COMMON METHODS FOR ALL GAME SUBCLASSES
     // USER INPUT METHODS
-    public Team getTeamFromUserInput(int number, String name) {
+    private Team getTeamFromUserInput(int number, String name) {
         System.out.print("Enter comma seperated list of players on team " + name + " (leave blank for default player):\t");
         String input;
 
@@ -150,6 +152,13 @@ public abstract class BoardGame extends Game implements TurnBased {
                 System.out.print("Enter comma seperated list of players on team " + name + " (leave blank for default player):\t");
             }
         }
+    }
+
+    public void setTeamsFromUserInput(String team0Name, String team1Name) {
+        Team[] teams = new Team[2]; // 2 teams
+        teams[0] = this.getTeamFromUserInput(0, team0Name);
+        teams[1] = this.getTeamFromUserInput(1, team1Name);
+        this.setTeams(teams);
     }
 
     public boolean isUserDone() {
@@ -264,8 +273,4 @@ public abstract class BoardGame extends Game implements TurnBased {
             System.out.println("Error writing game history data to " + FILENAME);
         }
     }
-
-    public void setBoardSizeFromUserInput() {};
-
-    public void setWinLengthFromUserInput() {};
 }

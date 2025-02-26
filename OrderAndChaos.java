@@ -1,27 +1,24 @@
 /*
     Description:
-    Class representing the Order and Chaos board game, extending the BoardGame class.
+    Class representing the Order and Chaos board game, extending the ConsecutivePiecesGame class.
     This game is played on a 6x6 board with two teams: ORDER and CHAOS.
     ORDER wins by aligning five identical pieces in a row, while CHAOS wins if the board fills without such a sequence.
 
-    Fields:  
-    - winPositions: Class level constant of a list of all possible winning positions.  
-    - winLength: Class level constant of the number of consecutive pieces needed to win (5).  
+    Class Level Constants:  
+    - DEFAULT_WIN_LENGTH: default win length
     - GAME_NAME: Class level constant of a string representing the game name.  
+    - TEAM_0_NAME: name of order team
+    - TEAM_1_NAME: name of chaos team
+    - ROWS: default number of rows in board
+    - COLS: default number of cols in board
 
     Constructors:  
-    - OrderAndChaos(): Initializes the board, generates winning positions, assigns teams, and sets the game type.  
+    - OrderAndChaos(): Initializes the board, generates winning positions from win length, assigns teams, and sets the game type.  
 
     Abstract Method Implementations:  
     - playGame(): Controls the game loop, alternating turns between ORDER and CHAOS, checking for a winner, and handling game resets.  
     - makeNextMove(): Handles player input for placing a piece (X or O) and updates the board.  
     - isWinner(): Checks if any winning condition has been met for the ORDER team only.
-
-    Getter Method:  
-    - getWinPositions(): Returns the list of winning positions.  
-
-    Private Methods:  
-    - generateWinPositions(): Generates all possible horizontal, vertical, and diagonal win conditions.  
 */
 
 import java.util.List;
@@ -30,20 +27,25 @@ public class OrderAndChaos extends ConsecutivePiecesGame {
     // CLASS LEVEL CONSTANTS
     private static final int DEFAULT_WIN_LENGTH = 5; // need 5 in a row to win
     private static final String GAME_NAME = "Order and Chaos";
+    public static final String TEAM_0_NAME = "ORDER";
+    public static final String TEAM_1_NAME = "CHAOS";
+    private static final int ROWS = 6;
+    private static final int COLS = 6;
 
     // CONSTRUCTORS
     public OrderAndChaos() {
-        super(6,6, GAME_NAME);
+        super(ROWS, COLS, GAME_NAME);
         this.setWinLength(DEFAULT_WIN_LENGTH);
         this.getBoard().setGameType(GAME_NAME);
+        this.setTeamsFromUserInput(TEAM_0_NAME, TEAM_1_NAME);
     }
 
     // ABSTRACT METHOD IMPLEMENTATIONS
     public void playGame() {
         Board board = this.getBoard();
         board.displayBoard();
-        Team orderTeam = this.getTeamByName("ORDER");
-        Team chaosTeam = this.getTeamByName("CHAOS");
+        Team orderTeam = this.getTeamByName(TEAM_0_NAME);
+        Team chaosTeam = this.getTeamByName(TEAM_1_NAME);
 
         while (true) {
             this.makeNextMove();

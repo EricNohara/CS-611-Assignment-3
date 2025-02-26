@@ -1,3 +1,33 @@
+/*
+    Description:
+    Class for the Super Tic Tac Toe game, which extends ConsecutivePiecesGame and manages a 3x3 grid of individual Tic Tac Toe games.
+
+    Class Level Constants:
+    - ROWS: Default rows in the Super Tic Tac Toe grid.
+    - COLS: Default columns in the Super Tic Tac Toe grid.
+    - GAME_NAME: Name of the game.
+
+    Instance Variables:
+    - games: 3x3 grid of TicTacToe games.
+    - boards: 3x3 grid of Board objects corresponding to each TicTacToe game.
+
+    Constructors:
+    - public SuperTicTacToe(): Initializes a Super Tic Tac Toe game, setting up individual TicTacToe instances 
+    with corresponding game ids A-I and their associated boards.
+
+    Abstract Method Implementations:
+    - isWinner(): Determines if the current team has won by checking all winning positions in the Super Tic Tac Toe grid.
+    - makeNextMove(): Processes the current player's move by selecting a TicTacToe game and making a move within that game.
+    - playGame(): Runs the game loop, allowing players to take turns until a winner is found or the game ends in a tie.
+
+    Other Important Methods:
+    - getGameByID(String id): Retrieves a specific TicTacToe game by its ID.
+    - getGameFromUserInput(Team team, Player player): Prompts the user to select a TicTacToe game from the grid.
+    - displayGame(): Displays the current state of all TicTacToe boards.
+    - resetGameBoards(): Resets all individual TicTacToe boards while maintaining game history of each game.
+    - allGamesFinished(): Checks if all TicTacToe games are either won or tied.
+*/
+
 import java.util.List;
 
 public class SuperTicTacToe extends ConsecutivePiecesGame {
@@ -11,6 +41,7 @@ public class SuperTicTacToe extends ConsecutivePiecesGame {
     public SuperTicTacToe() {
         super(ROWS, COLS, GAME_NAME);
         this.getBoard().setGameType(GAME_NAME);
+        this.setTeamsFromUserInput("" + TicTacToe.TEAM_0_SYMBOL, "" + "" + TicTacToe.TEAM_1_SYMBOL);
 
         char gameID = 'A';
         for (int r = 0; r < ROWS; r++) {
@@ -76,7 +107,7 @@ public class SuperTicTacToe extends ConsecutivePiecesGame {
 
     // DISPLAY METHOD
     public void displayGame() {
-        System.out.println(Board.boardsToString(this.boards));
+        Board.displayBoards(boards);
     }
 
     // resets every individual tic tac toe board
