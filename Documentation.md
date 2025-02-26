@@ -20,36 +20,32 @@ Game (abstract)
 ├── Has a List of GameHistory
 │
 ├── BoardGame (abstract) ── implements TurnBased
-│   ├── Has a Board
-│   │
-│   ├── ConsecutivePiecesGame (abstract)
-│   │   │
-│   │   ├── TicTacToe
-│   │   ├── OrderAndChaos
-│   │   ├── SuperTicTacToe
-│   │       ├── Has an array of TicTacToe games
+    ├── Has a Board
+    │
+    ├── ConsecutivePiecesGame (abstract)
+        │
+        ├── TicTacToe
+        ├── OrderAndChaos
+        ├── SuperTicTacToe
+            ├── Has an array of TicTacToe games
 
 Board
 ├── Has an array of Cell
 
-Cell
-
 GameHistory (abstract)
-│
 ├── BoardGameHistory
 
 Team
 ├── Has an array of Player
 
-Player
-
-GamePiece
-
-GameInitializer
-
 Main
 ├── Has a GameInitializer
 
+Standalone Classes:
+Cell
+Player
+GamePiece
+GameInitializer
 ```
 
 ---
