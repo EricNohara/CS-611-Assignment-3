@@ -1,6 +1,6 @@
 # CS611-Assignment 3
 
-## Tic-Tac-Toe and other Variants
+## Tic Tac Toe - Take II
 
 ---
 
@@ -13,7 +13,8 @@
 
 ## Files
 
-- Main.java: Contains main method. Creates and runs the game specified by the user.
+- Main.java: Contains main method. Uses GameInitializer to initialize and run a user specified game.
+- GameInitializer.java: Responsible for initializing the selected board game based on user input.
 - GamePiece.java: A single board game piece to be placed on the board.
 - Cell.java: A single cell on a board game board, storing the cell's value and metadata (user, team, turn when cell modified).
 - Board.java: A 2D array of cells, used to display the board.
@@ -22,8 +23,10 @@
 - TurnBased.java: Interface defining methods for a game that is turn based.
 - Game.java: Abstract class defining fields and methods any kind of game must have.
 - BoardGame.java: Abstract class defining fields and methods for board games.
-- TicTacToe.java: Child of BoardGame, defines methods with TicTacToe game loop.
-- OrderAndChaos.java: Child of BoardGame, defines methods with OrderAndChaos game loop.
+- ConsecutivePiecesGame: Abstract class defining fields and methods for board games that require getting n pieces in a row to win.
+- TicTacToe.java: Child of ConsecutivePiecesGame, defines methods with TicTacToe game loop.
+- OrderAndChaos.java: Child of ConsecutivePiecesGame, defines methods with OrderAndChaos game loop.
+- SuperTicTacToe.java: Chile of ConsecutivePiecesGame, defines methods with SuperTicTacToe game loop, keeping track of a 3x3 board of TicTacToe games.
 - GameHistory.java: Abstract class defining fields and methods to store the history of any game.
 - BoardGameHistory.java: Stores the full history of game with data specific to BoardGame.
 
@@ -35,8 +38,8 @@
 
 ### Design Decisions
 - Created the abstract Game class to allow for future games to be developed using the same framework.
-- TicTacToe and OrderAndChaos extend BoardGame rather than OrderAndChaos being a subclass of TicTacToe because they are both board games with different rules (although similar).
-- The Game -> BoardGame -> TicTacToe/OrderAndChaos hierarchy makes it easy to create new board games with different rules, and also to create new games that are not board games.
+- TicTacToe, OrderAndChaos, and SuperTicTacToe extend ConsecutivePiecesGame rather than OrderAndChaos being a subclass of TicTacToe because they are both board games with different rules (although similar) but require getting n pieces in a row to win.
+- The Game -> BoardGame -> ConsecutivePiecesGame -> TicTacToe/OrderAndChaos/SuperTicTacToe hierarchy makes it easy to create new board games with different rules and win conditions, and also to create new games that are not board games.
 - TurnBased interface allows ALL board games to be turned based, while allowing generic games to not be (e.g. shooters).
 - BoardGameHistory extending GameHistory allows me to store the game histories of generic games later on.
 - I broke up Board and Cell into seperate classes to more easily store metadata about the game state.
@@ -50,11 +53,12 @@
 - Implemented Team to allow only teams to play board games rather than individual players. Individual players are treated as teams with only one player.
 - Implemented a method to select a random player from a given team to make the next move.
 - Implemented certain user I/O methods in BoardGame class because all board games can query a user to create teams, get the next input cell, or check if the user is done playing.
-- Rather than iterating over all cells in the board every turn to check if there is a winner, I precomputed all possible winning positions (set of (row, column) pairs) at construction of a new TicTacToe/OrderAndChaos game based on the board's dimensions and the specified win length. 
-- Since OrderAndChaos is always 6x6 with win length = 5, I made the precomputed win positions static to avoid recomputing them.
+- All ConsecutivePiecesGames precompute all possible winning positions as a set of lists of (row, col) pairs based on the board's dimensions and the specified win length. This is done to make checking the win condition much more efficient, as the isWinner methods only need to check the precomputed positions to see if a player has won rather iterating over all cells in the board every turn. 
 - If a user wants to play again, rather than a new game object being made, the board is reset along with the turn number. This was done to avoid recomputing winning positions unnecessarily.
 - Implemented input error checking for all user inputs.
 - If inputted, the game histories for ALL games played by the user will be exported to a data.txt file.
+- The SuperTicTacToe game will export the game history of the Super game and all TicTacToe games it contains.
+- Implemented GameInitializer class to allow easy extendibility to allow a user to choose from more games in the future.
 
 
 ---
@@ -74,86 +78,114 @@ java Main           // run
 
 
 ```
-ernohara@LAPTOP-K5VLBG69:/mnt/c/Users/ericn/OneDrive/Desktop/BU/CS 611/Assignment 2$ java Main
-Welcome to CS 611 Assignment 2.
-Please enter game to play (T/O):        t
-Enter comma seperated list of players on team X (leave blank for default player):       Eric, Player 1, Player 2
-Enter comma seperated list of players on team O (leave blank for default player):
-Enter desired board size (rows, columns) or leave blank to play default game:   3,10
-Enter desired win length (pieces in a row to win) or leave blank to play default:       3
-     0   1   2   3   4   5   6   7   8   9
-   +---+---+---+---+---+---+---+---+---+---+
-0  |   |   |   |   |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-1  |   |   |   |   |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-2  |   |   |   |   |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-[TEAM X] Player 2 enter your move (row,col):    0,2
-     0   1   2   3   4   5   6   7   8   9
-   +---+---+---+---+---+---+---+---+---+---+
-0  |   |   | X |   |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-1  |   |   |   |   |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-2  |   |   |   |   |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-[TEAM O] Anonymous Player enter your move (row,col):    0,3
-     0   1   2   3   4   5   6   7   8   9
-   +---+---+---+---+---+---+---+---+---+---+
-0  |   |   | X | O |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-1  |   |   |   |   |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-2  |   |   |   |   |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-[TEAM X] Player 1 enter your move (row,col):    1,2
-     0   1   2   3   4   5   6   7   8   9
-   +---+---+---+---+---+---+---+---+---+---+
-0  |   |   | X | O |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-1  |   |   | X |   |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-2  |   |   |   |   |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-[TEAM O] Anonymous Player enter your move (row,col):    1,3
-     0   1   2   3   4   5   6   7   8   9
-   +---+---+---+---+---+---+---+---+---+---+
-0  |   |   | X | O |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-1  |   |   | X | O |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-2  |   |   |   |   |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-[TEAM X] Player 2 enter your move (row,col):    2,2
-     0   1   2   3   4   5   6   7   8   9
-   +---+---+---+---+---+---+---+---+---+---+
-0  |   |   | X | O |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-1  |   |   | X | O |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
-2  |   |   | X |   |   |   |   |   |   |   |
-   +---+---+---+---+---+---+---+---+---+---+
+Please enter game to play (T/O/S):      s
+Enter comma seperated list of players on team X (leave blank for default player):       Eric
+Enter comma seperated list of players on team O (leave blank for default player):       Player1,Player2,Player3
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+
+[TEAM X] Eric enter the game grid ID to make a move (A-I):      a
+[TEAM X] Eric enter your move (row,col):        0,0
++---+---+---+ +---+---+---+ +---+---+---+
+| X |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+
+[TEAM O] Player2 enter the game grid ID to make a move (A-I):   b
+[TEAM O] Player2 enter your move (row,col):     0,0
++---+---+---+ +---+---+---+ +---+---+---+
+| X |   |   | | O |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+
+...
+
+[TEAM X] Eric enter the game grid ID to make a move (A-I):      i
+[TEAM X] Eric enter your move (row,col):        0,2
+X won board I
++---+---+---+ +---+---+---+ +---+---+---+
+| X | X | X | | O | O | O | | O | O | O |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | | X | X | X | | O | O |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | | X | X | X |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+|   |   |   | |   |   |   | |   |   |   |
++---+---+---+ +---+---+---+ +---+---+---+
+
 Congratulations team X! You won the game!
 Would you like to play again (y/n):     n
 [TEAM X] Eric:  1 wins
-[TEAM X] Player 1:      1 wins
-[TEAM X] Player 2:      1 wins
-[TEAM O] Anonymous Player:      0 wins
+[TEAM O] Player1:       0 wins
+[TEAM O] Player2:       0 wins
+[TEAM O] Player3:       0 wins
 Would you like to save your game histories to data.txt (y/n):   y
 Saved game history data in data.txt
-ernohara@LAPTOP-K5VLBG69:/mnt/c/Users/ericn/OneDrive/Desktop/BU/CS 611/Assignment 2$ cat data.txt
-GAME NUMBER:    5
-GAME NAME:      Tic Tac Toe
-WINNER TEAM:    Team X
-TURNS TAKEN:    5
-BOARD SIZE:     3x10
-MOVES (NUMBER, POSITION, PLAYER, PIECE, TEAM):
-0,(0,2),Player 2,Piece X,Team X
-1,(0,3),Anonymous Player,Piece O,Team O
-2,(1,2),Player 1,Piece X,Team X
-3,(1,3),Anonymous Player,Piece O,Team O
-4,(2,2),Player 2,Piece X,Team X
 ```
 
 
