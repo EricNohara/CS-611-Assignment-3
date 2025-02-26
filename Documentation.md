@@ -13,29 +13,44 @@
 
 ## Class Hierarchy Structure
 
-- Game (abstract)
-    - BoardGame (abstract): implements TurnBased
-        - ConsecutivePiecesGame (abstract)
-            - TicTacToe
-            - OrderAndChaos
-            - SuperTicTacToe
+```
+Game (abstract)
+├── Has an array of Team
+├── Has a winner Team
+├── Has a List of GameHistory
+│
+├── BoardGame (abstract) ── implements TurnBased
+│   ├── Has a Board
+│   │
+│   ├── ConsecutivePiecesGame (abstract)
+│   │   │
+│   │   ├── TicTacToe
+│   │   ├── OrderAndChaos
+│   │   ├── SuperTicTacToe
+│   │       ├── Has an array of TicTacToe games
 
-- Board
+Board
+├── Has an array of Cell
 
-- Cell
+Cell
 
-- GameHistory (abstract)
-    - BoardGameHistory
+GameHistory (abstract)
+│
+├── BoardGameHistory
 
-- Player
+Team
+├── Has an array of Player
 
-- Team
+Player
 
-- GamePiece
+GamePiece
 
-- GameInitializer
+GameInitializer
 
-- Main
+Main
+├── Has a GameInitializer
+
+```
 
 ---
 
