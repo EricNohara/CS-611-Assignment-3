@@ -319,4 +319,3 @@ MOVES (NUMBER, POSITION, PLAYER, PIECE, TEAM):
 
 - Used [w3schools](https://www.w3schools.com/java/java_files_create.asp) to learn how to do file I/O in java for writing game history data to data.txt file.
 - Used [documentation](https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html) to sort turns in BoardGameHistory.
-# CS-611-Assignment-3
