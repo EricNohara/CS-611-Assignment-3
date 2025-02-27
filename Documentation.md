@@ -63,6 +63,8 @@ GameInitializer
 
 - The SuperTicTacToe class contains a 2D array of TicTacToe games, rather than handling the TicTacToe logic for each individual board on the super grid within the SuperTicTacToe class. Rather, the game simply chooses which TicTacToe game to make a move on and calls TicTacToe methods such as isWinner, makeMove, etc. to make a move on that specific game using the interface provided in TicTacToe. Not only does this reduce repeated code, it ensures that the games within SuperTicTacToe follow the exact same game logic as in TicTacToe.
 
+---
+
 ## Notable Changes from Assignment 2
 
 - All logic regarding winLength and winPositions were abstracted away into the ConsecutivePiecesGame to reduce repeated code and ensure that all games that require n in a row to win generated winning positions in the same way. 
