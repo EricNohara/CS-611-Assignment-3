@@ -65,5 +65,15 @@ GameInitializer
 
 ## Notable Changes from Assignment 2
 
+- All logic regarding winLength and winPositions were abstracted away into the ConsecutivePiecesGame to reduce repeated code and ensure that all games that require n in a row to win generated winning positions in the same way. 
 
+- Board was updated to provide a toString method along with a display method. Additionally, the static methods displayBoards and boardsToString were added to take as input a grid of boards and display or return a string representation of the boards. These static methods are used to display the SuperTicTacToe games.
+
+- The Game class received an additional optional field called gameID which acts as an identifier for a given game object. TicTacToe games are initialized in the SuperTicTacToe constructor to have gameIDs ranging from A - I. The gameID is what the user utilizes to reference a specific game to make a move in for SuperTicTacToe. Additionally, it allows sub games to store their respective game histories while keeping track of the ID of the game.
+
+- The team generation for TicTacToe, OrderAndChaos, and SuperTicTacToe were put into their respective constructors, since creating teams is an action that should be done when the game object is initialized.
+
+- TicTacToe got a new constructor TicTacToe(String gameID) which skips the team generation and board size input steps and sets the gameID. This constructor is what SuperTicTacToe uses, since we do not want to get user input from all 9 TicTacToe games when the Super game is chosen.
+
+- Game initialization was put in its own class GameInitializer to remove any specific logic from the Main class and improve extendibility for the future.
 

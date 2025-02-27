@@ -30,7 +30,6 @@
     - getTeamFromUserInput(int number, String name): Gets team input from the user.  
     - isUserDone(): Checks if the user wants to continue playing.  
     - getNextPlayerInputCell(Team team, Player player): Gets the player's move input.  
-    - getNextPlayerInputCell(Team team, Player player, Board board): Gets the player's move for a specific board (used in Super)
 */
 
 
@@ -207,42 +206,11 @@ public abstract class BoardGame extends Game implements TurnBased {
         return this.board.getCell(row, column);
     }
 
-    public Cell getNextPlayerInputCell(Team team, Player player, Board board) {
-        System.out.print("[TEAM " + team.getName() + "] " + player.getName() + " enter your move (row,col):\t");
-        int row, column;
-        String input;
-
-        while (true) {
-            try {
-                input = this.scanner.next();
-                String[] parts = input.split(",");
-
-                if (parts.length != 2) throw new IllegalArgumentException();
-
-                row = Integer.parseInt(parts[0].trim());
-                column = Integer.parseInt(parts[1].trim());
-
-                if (!this.isValidMove(row, column, board)) throw new IllegalArgumentException();
-                break;
-            } catch (Exception e) {
-                System.out.print("Invalid move. Please enter a valid move (row,col):\t");
-            }   
-        }
-
-        return board.getCell(row, column);
-    }
-
     // VALIDATION METHOD TO CHECK IF THE MOVE IS VALID
     public boolean isValidMove(int row, int column) {
         return row >= 0 && row < this.board.getRows() && 
                 column >= 0 && column < this.board.getColumns() &&
                 this.board.isBoardCellEmpty(row, column);
-    }
-
-    public boolean isValidMove(int row, int column, Board board) {
-        return row >= 0 && row < board.getRows() && 
-                column >= 0 && column < board.getColumns() &&
-                board.isBoardCellEmpty(row, column);
     }
 
     // EXIT ROUTINE FOR BOARD GAMES: save the list of game histories to a seperate file

@@ -155,8 +155,8 @@ public class SuperTicTacToe extends ConsecutivePiecesGame {
         Player currentPlayer = currentTeam.getRandomPlayer(); // get a random player from the current team
 
         TicTacToe game = this.getGameFromUserInput(currentTeam, currentPlayer);
-        Board gameBoard = game.getBoard();
-        Cell inputCell = this.getNextPlayerInputCell(currentTeam, currentPlayer, gameBoard); // get the input cell for the selected game board
+        // Board gameBoard = game.getBoard();
+        Cell inputCell = game.getNextPlayerInputCell(currentTeam, currentPlayer); // get the input cell for the selected game board
 
         GamePiece piece = currentTeam.getNumber() == 0 ? new GamePiece(TicTacToe.TEAM_0_SYMBOL) : new GamePiece(TicTacToe.TEAM_1_SYMBOL);
         game.makeMove(inputCell, piece, currentTeam, this.getTurnNumber(), currentPlayer);
